@@ -1,45 +1,66 @@
-cmake_minimum_required(VERSION 3.16)
-project(miniEngine LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.20)
+project(MiniEngine LANGUAGES CXX)
 
+# Use C++17
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# --------------------
-# Add GLFW submodule
-# --------------------
-add_subdirectory(libs/glfw)
+# -----------------------------
+# Output folder for executable
+# -----------------------------
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-# --------------------
-# GLAD
-# --------------------
-add_library(glad STATIC
-    libs/glad/src/glad.c
-)
-target_include_directories(glad PUBLIC
-    libs/glad/include
-)
-
-# --------------------
-# App sources
-# --------------------
-file(GLOB_RECURSE APP_SOURCES
+# -----------------------------
+# Source files
+# -----------------------------
+file(GLOB_RECURSE ENGINE_SOURCES
     src/*.cpp
 )
 
-add_executable(miniEngine
-    ${APP_SOURCES}
+add_executable(MiniEngine ${ENGINE_SOURCES})
+
+# -----------------------------
+# Include directories
+# -----------------------------
+target_include_directories(MiniEngine PRIVATE
+    src
+    libs/glad/include
+    libs/glfw/include
+    libs/glm
 )
 
-# --------------------
-# Link GLFW
-# --------------------
-target_link_libraries(miniEngine PRIVATE glad glfw)
+# -----------------------------
+# GLAD
+# -----------------------------
+add_library(glad STATIC
+    libs/glad/src/glad.c
+)
+target_include_directories(glad PUBLIC libs/glad/include)
+target_link_libraries(MiniEngine glad)
 
-# --------------------
-# Windows system libs
-# --------------------
-if (WIN32)
-    target_link_libraries(miniEngine PRIVATE
-        opengl32
+# -----------------------------
+# GLFW
+# -----------------------------
+set(GLFW_BUILD_EXAMPLES OFF CACHE INTERNAL "" )
+set(GLFW_BUILD_TESTS    OFF CACHE INTERNAL "" )
+set(GLFW_BUILD_DOCS     OFF CACHE INTERNAL "" )
+
+add_subdirectory(libs/glfw)
+target_link_libraries(MiniEngine glfw)
+
+# -----------------------------
+# OpenGL
+# -----------------------------
+find_package(OpenGL REQUIRED)
+target_link_libraries(MiniEngine OpenGL::GL)
+
+# -----------------------------
+# Windows: copy DLL (if using GLFW as DLL)
+# -----------------------------
+if(WIN32)
+    add_custom_command(TARGET MiniEngine POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        $<TARGET_FILE:glfw>
+        $<TARGET_FILE_DIR:MiniEngine>
     )
 endif()
