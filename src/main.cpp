@@ -14,8 +14,7 @@ static void framebuffer_size_callback(GLFWwindow* window, int w, int h)
 }
 
 int main()
-{
-
+{ 
     if (!glfwInit()) {
         std::cout << "GLFW init failed\n";
         return -1;
