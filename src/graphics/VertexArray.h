@@ -11,7 +11,7 @@ public:
     void bind() const;
     void unbind() const;
 
-    void addVertexAttributs(
+    void addVertexAttrib(
         unsigned int index,
         int count,
         unsigned int type,

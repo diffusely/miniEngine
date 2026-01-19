@@ -58,13 +58,3 @@ void Application::run()
         glfwSwapBuffers(m_Window);
     }
 }
-
-void Application::update(float deltaTime)
-{
-    
-}
-
-void Application::render()
-{
-
-}

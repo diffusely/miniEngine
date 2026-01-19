@@ -9,12 +9,12 @@ class Application
 public:
 
     Application(unsigned int width, unsigned int height, const char* title);
-    ~Application();
+    virtual ~Application();
 
     void run();
 
-    void update(float deltaTime);
-    void render();
+    virtual void update(float deltaTime) = 0;
+    virtual void render() = 0;
 
     bool isRunning() const { return !glfwWindowShouldClose(m_Window); }
 

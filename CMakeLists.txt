@@ -19,6 +19,15 @@ file(GLOB_RECURSE ENGINE_SOURCES
 
 add_executable(MiniEngine ${ENGINE_SOURCES})
 
+file(GLOB SHADERS "${CMAKE_SOURCE_DIR}/shaders/*")
+foreach(SHADER ${SHADERS})
+    add_custom_command(TARGET MiniEngine POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${SHADER}
+        $<TARGET_FILE_DIR:MiniEngine>
+    )
+endforeach()
+
 # -----------------------------
 # Include directories
 # -----------------------------

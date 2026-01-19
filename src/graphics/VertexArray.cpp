@@ -1,6 +1,7 @@
 #include "VertexArray.h"
 
 VertexArray::VertexArray()
+    : m_ID(0)
 {
     glGenVertexArrays(1, &m_ID);
 }
@@ -20,7 +21,7 @@ void VertexArray::unbind() const
     glBindVertexArray(0);
 }
 
-void VertexArray::addVertexAttributs(
+void VertexArray::addVertexAttrib(
     unsigned int index, 
     int count, 
     unsigned int type, 
